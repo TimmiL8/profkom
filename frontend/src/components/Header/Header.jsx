@@ -7,7 +7,8 @@ export default function Header() {
             <div>
                 <Link
                     to="/"
-                    className="border-2 px-3 py-1.5 text-white transition-all duration-300 hover:shadow-lg hover:shadow-stone-300 hover:scale-105 hover:bg-orange-800 rounded inline-block"
+                    className="border-2 px-3 py-1.5 text-white transition-all duration-300 hover:shadow-lg
+                    hover:shadow-stone-300 hover:scale-105 hover:bg-orange-800 rounded inline-block"
                 >
                     Button 1
                 </Link>
@@ -16,13 +17,15 @@ export default function Header() {
             <div className="flex gap-2.5">
                 <Link
                     to="/"
-                    className="border-2 px-3 py-1.5 text-white transition-all duration-300 hover:shadow-lg hover:shadow-stone-300 hover:scale-105 hover:bg-orange-800 rounded inline-block"
+                    className="border-2 px-3 py-1.5 text-white transition-all duration-300 hover:shadow-lg
+                    hover:shadow-stone-300 hover:scale-105 hover:bg-orange-800 rounded inline-block"
                 >
                     Button 2
                 </Link>
                 <Link
                     to="/"
-                    className="border-2 px-3 py-1.5 text-white transition-all duration-300 hover:shadow-lg hover:shadow-stone-300 hover:scale-105 hover:bg-orange-800 rounded inline-block"
+                    className="border-2 px-3 py-1.5 text-white transition-all duration-300 hover:shadow-lg
+                    hover:shadow-stone-300 hover:scale-105 hover:bg-orange-800 rounded inline-block"
                 >
                     Button 3
                 </Link>
@@ -31,7 +34,8 @@ export default function Header() {
             <div>
                 <Link
                     to="/sign-in"
-                    className="border-2 px-3 py-1.5 text-white transition-all duration-300 hover:shadow-lg hover:shadow-stone-300 hover:scale-105 hover:bg-orange-800 rounded inline-block"
+                    className="border-2 px-3 py-1.5 text-white transition-all duration-300 hover:shadow-lg
+                    hover:shadow-stone-300 hover:scale-105 hover:bg-orange-800 rounded inline-block"
                 >
                     Sign in
                 </Link>
