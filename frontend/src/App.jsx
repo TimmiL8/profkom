@@ -8,6 +8,8 @@ import AboutEvent from "./components/AboutEvent/AboutEvent.jsx";
 import CreateEvent from "./components/CreateEvent/CreateEvent.jsx";
 import EditEvents from "./components/EditEvents/EditEvents.jsx";
 import SignUpPage from "./components/SignUpPage/SignUpPage.jsx";
+import MyEvents from "./components/MyEvents/MyEvents.jsx";
+import RequireAdmin from "./components/RequireAdmin/RequireAdmin.jsx";
 
 function App() {
     return (
@@ -17,9 +19,18 @@ function App() {
                 <Route index element={<MainPage />} />
                 <Route path="/sign-in" element={<SignInPage />} />
                 <Route path="/sign-up" element={<SignUpPage />} />
-                <Route path="/create-event" element={<CreateEvent />} />
-                <Route path="/edit-events" element={<EditEvents />} />
+                <Route path="/create-event" element={
+                    <RequireAdmin>
+                        <CreateEvent />
+                    </RequireAdmin>
+                } />
+                <Route path="/edit-events" element={
+                    <RequireAdmin>
+                        <EditEvents />
+                    </RequireAdmin>
 
+                } />
+                <Route path="/my-events" element={<MyEvents />} />
                 <Route path="/events/:aboutEvent" element={<AboutEvent />} />
                 <Route path="/events" element={<EventsPage />} />
             </Routes>

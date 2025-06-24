@@ -8,16 +8,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
+const adminEmails = process.env.ADMIN_EMAILS.split(",");
 const app = express();
 const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
-
-if (!JWT_SECRET) {
-    console.error("JWT_SECRET is not defined! Did you forget .env or rename key.env?");
-    process.exit(1); // зупиняє сервер, бо без секрету працювати небезпечно
-}
 
 // Підключення до бази даних
 const db = new Database('db.sqlite');
@@ -133,15 +129,16 @@ app.post('/register', (req, res) => {
 
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
+
     if (!email || !password) return res.status(400).json({ error: 'Missing fields' });
 
     const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
     if (!user) return res.status(401).json({ error: 'Invalid credentials' });
-
+    const isAdmin = adminEmails.includes(user.email);
     const password_hash = hashPassword(password);
     if (password_hash !== user.password_hash) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id, email: user.email, isAdmin }, JWT_SECRET, { expiresIn: "1h" });
     res.json({ token });
 });
 
@@ -217,5 +214,28 @@ app.get('/my-subscriptions', authenticateToken, (req, res) => {
     `).all(user_id);
 
     res.json(events);
+});
+
+app.post('/unsubscribe', authenticateToken, (req, res) => {
+    const { event_id } = req.body;
+    const user_id = req.user.id;
+
+    const result = db.prepare('DELETE FROM subscriptions WHERE user_id = ? AND event_id = ?')
+        .run(user_id, event_id);
+
+    if (result.changes > 0) {
+        res.json({ success: true });
+    } else {
+        res.status(404).json({ error: "Subscription not found" });
+    }
+});
+
+app.get('/me', authenticateToken, (req, res) => {
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const isAdmin = adminEmails.includes(user.email);
+    res.json({ id: user.id, email: user.email, isAdmin });
 });
 
