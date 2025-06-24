@@ -1,44 +1,54 @@
-import {Link} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { useLocation } from "react-router-dom";
 
 export default function Header() {
-    return (
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [user, setUser] = useState(null);
 
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                setUser(decoded);
+            } catch (err) {
+                localStorage.removeItem("token");
+                setUser(null);
+            }
+        }
+    }, [location.pathname]); // запускається один раз при монтуванні
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        setUser(null);
+        navigate("/");
+    };
+
+    return (
         <header className="flex justify-between items-center bg-orange-900 h-16 px-4">
             <div>
-                <Link
-                    to="/"
-                    className="header-button"
-                >
-                    Main
-                </Link>
+                <Link to="/" className="header-button">Main</Link>
             </div>
 
             <div className="flex gap-2.5">
-                <Link
-                    to="/events"
-                    className="header-button"
-                >
-                    Events
-                </Link>
-                <Link
-                    to="/"
-                    className="header-button"
-                >
-                    Button 3
-                </Link>
+                <Link to="/events" className="header-button">Events</Link>
+                <Link to="/create-event" className="header-button">Create</Link>
+                <Link to="/edit-events" className="header-button">Edit</Link>
             </div>
 
-            <div>
-                <Link
-                    to="/sign-in"
-                    className="header-button"
-                >
-                    Sign in
-                </Link>
+            <div className="flex gap-2 items-center">
+                {user ? (
+                    <>
+                        <span className="text-white">{user.email}</span>
+                        <button onClick={handleLogout} className="header-button">Log out</button>
+                    </>
+                ) : (
+                    <Link to="/sign-in" className="header-button">Sign In</Link>
+                )}
             </div>
         </header>
-
-
-    )
-
+    );
 }

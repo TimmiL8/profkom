@@ -5,45 +5,21 @@ export default function EventsPage() {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        setEvents([
-            {
-                name: "Турнір з покеру 1",
-                date: "2025-12-12",
-                place: "Аудиторія 0.01",
-                image: "src/assets/poker_event.png"
-            },
-            {
-                name: "Турнір з покеру 2",
-                date: "2025-01-01",
-                place: "Аудиторія 0.02",
-                image: "src/assets/poker_event.png"
-            },
-            {
-                name: "Турнір з покеру 3",
-                date: "2025-02-02",
-                place: "Аудиторія 0.3",
-                image: "src/assets/poker_event.png"
-            },
-            {
-                name: "Турнір з покеру 4",
-                date: "2025-03-03",
-                place: "Аудиторія 0.04",
-                image: "src/assets/poker_event.png"
-            },
-            {
-                name: "Турнір з покеру 5",
-                date: "2025-03-03",
-                place: "Аудиторія 0.05",
-                image: "src/assets/poker_event.png"
-            }
-        ]);
-    }, [])
+        const fetchEvents = async () => {
+            const res = await fetch('http://localhost:3001/events');
+            const data = await res.json();
+            setEvents(data);
+        };
 
+        fetchEvents();
+    }, []);
     return (
         <>
-            <div className="flex flex-wrap m-24 gap-28 items-center justify-center content-center">
+            <div className="flex flex-wrap m-14 gap-16 items-center justify-center content-center">
                 {events.map(event => (
                     <EventCard
+                        key={event.id}
+                        id={event.id}
                         name={event.name}
                         date={event.date}
                         place={event.place}
@@ -52,5 +28,5 @@ export default function EventsPage() {
                 ))}
             </div>
         </>
-    )
+    );
 }
