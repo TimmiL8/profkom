@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 
 export default function CreateEvent() {
     const [name, setName] = useState("");
@@ -6,6 +6,16 @@ export default function CreateEvent() {
     const [place, setPlace] = useState("");
     const [image, setImage] = useState("");
 
+    function handleImageUpload(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result); // base64 string
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
     async function handleOnSubmitClick() {
         if (name && date && place && image) {
@@ -36,11 +46,72 @@ export default function CreateEvent() {
 
     return (
         <>
-            <input type="text" placeholder="Enter event name" onInput={(e) => setName(e.target.value)}/>
-            <input type="text" placeholder="Enter event date" onInput={(e) => setDate(e.target.value)}/>
-            <input type="text" placeholder="Enter event place" onInput={(e) => setPlace(e.target.value)}/>
-            <input type="text" placeholder="Enter event photo adress" onInput={(e) => setImage(e.target.value)}/>
-            <button onClick={handleOnSubmitClick} className="bg-amber-400 m-14">Submit</button>
+            <h1 className="text-3xl font-bold text-red-600 mb-10 font-normal mt-8">Створити захід</h1>
+            <div className="flex flex-col gap-5 items-center">
+                <div className="flex gap-2 flex-col">
+                    <label>назва заходу</label>
+                    <input
+                        type="text"
+                        placeholder=""
+                        onInput={(e) => setName(e.target.value)}
+                        className="w-60 h-8 bg-gray-200 border-none rounded"
+                    />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <label>дата</label>
+                    <input
+                        type="date"
+                        placeholder=""
+                        onInput={(e) => setDate(e.target.value)}
+                        className="w-60 h-8 bg-gray-200 border-none rounded"
+                    />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <label>час</label>
+                    <input
+                        type="time"
+                        placeholder=""
+                        onInput={(e) => setTime(e.target.value)}
+                        className="w-60 h-8 bg-gray-200 border-none rounded"
+                    />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <label>місце/адреса</label>
+                    <input
+                        type="text"
+                        placeholder=""
+                        onInput={(e) => setPlace(e.target.value)}
+                        className="w-60 h-8 bg-gray-200 border-none rounded"
+                    />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <label>ціна</label>
+                    <input
+                        type="text"
+                        placeholder=""
+                        onInput={(e) => setPrice(e.target.value)}
+                        className="w-60 h-8 bg-gray-200 border-none rounded"
+                    />
+                </div>
+
+                <label className="mt-10 w-3xs flex flex-col items-center justify-center border bg-white rounded-xl shadow-lg px-6 py-4 cursor-pointer hover:shadow-xl">
+                    <span className="text-3xl">↓</span>
+                    <span className="text-xl font-medium">завантажити фото</span>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                </label>
+
+                <button
+                    onClick={handleOnSubmitClick}
+                    className="mt-10 bg-black text-white font-bold py-4 px-10 rounded-xl hover:bg-neutral-800 m-auto mb-4"
+                >
+                    ГОТОВО
+                </button>
+            </div>
         </>
+
     )
 }

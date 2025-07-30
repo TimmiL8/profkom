@@ -13,7 +13,7 @@ const app = express();
 const PORT = 3001;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '3mb' }));
 
 // Підключення до бази даних
 const db = new Database('db.sqlite');

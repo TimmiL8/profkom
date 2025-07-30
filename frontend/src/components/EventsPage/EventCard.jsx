@@ -3,20 +3,24 @@ import {Link} from "react-router-dom";
 export default function EventCard(props) {
     return (
         <Link to={`/events/${props.id}`}>
-            <div
-                className="w-72 h-96 bg-gray-600 border-4 rounded-2xl overflow-hidden flex flex-col
-            transition-all duration-300 hover:scale-105">
-                <div className="h-2/3 w-full">
-                    <img src={props.image} alt="" className="w-full h-full object-cover"/>
+            <div className="w-72 h-96 bg-white rounded-3xl  p-4 flex flex-col shadow-[0_5px_20px_rgba(0,0,0,0.35)] justify-between hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-[60%] rounded-2xl overflow-hidden">
+                    <img
+                        src={props.image}
+                        alt=""
+                        className="w-full h-full object-cover"
+                    />
                 </div>
-                <div className="h-1/3 p-2 text-white flex flex-col justify-between">
-                    <h2 className="text-center font-bold text-xl">{props.name}</h2>
-                    <div className="text-sm">
-                        <p>date: {props.date}</p>
-                        <p>place: {props.place}</p>
-                    </div>
-                </div>
+                <h2 className="text-xl font-bold text-black text-center mt-3">
+                    {props.name}
+                </h2>
+                <button
+                    className="mt-2 bg-black text-white py-2 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors"
+                >
+                    Переглянути
+                </button>
             </div>
         </Link>
+
     );
 }

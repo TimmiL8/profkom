@@ -1,26 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&display=swap');
 @import "tailwindcss";
 
-.header-button {
-    @apply px-2 py-2 border-2 text-white transition-all duration-300 hover:shadow-lg
-    hover:shadow-stone-300 hover:scale-105 rounded;
-}
+
 
 .article {
-    @apply border-e-red-800 px-2 py-2 text-black flex flex-row items-center justify-center gap-2 m-auto mt-28 w-2/3;
+    @apply px-4 py-6 text-black flex flex-col lg:flex-row justify-center items-center gap-16 mx-auto mt-28 w-full ;
 }
 
-.article p, .article img {
-    @apply w-1/2 object-contain text-2xl font-mono;
+.article p {
+    @apply w-full text-lg sm:text-xl leading-relaxed text-justify max-w-xl;
 }
 
 .article img {
-    @apply h-28 object-contain;
-}
-
-.even p {
-    @apply text-right;
-}
-
-.odd p {
-    @apply text-left;
+    @apply w-full max-w-xl rounded-xl object-cover;
 }
