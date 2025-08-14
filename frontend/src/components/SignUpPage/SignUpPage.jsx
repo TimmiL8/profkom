@@ -13,8 +13,14 @@ export default function SignUpPage() {
     async function handleSignUp() {
         const user_group = userGroup;
         const user_name = userName;
-        // 1. РЕЄСТРАЦІЯ
-        const response = await fetch("http://localhost:3001/register", {
+        // 1. РЕЄСТРАЦІЯ loopback host:
+        // const response = await fetch("http://localhost:3001/register", {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     body: JSON.stringify({ user_name, surname, email, password, user_group, phone })
+        // });
+
+        const response = await fetch("http://192.168.1.52:3001/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ user_name, surname, email, password, user_group, phone })
@@ -26,8 +32,14 @@ export default function SignUpPage() {
             return;
         }
 
-        // 2. АВТОМАТИЧНИЙ ЛОГІН
-        const loginResponse = await fetch("http://localhost:3001/login", {
+        // 2. АВТОМАТИЧНИЙ ЛОГІН on loopback host:
+        // const loginResponse = await fetch("http://localhost:3001/login", {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     body: JSON.stringify({ email, password })
+        // });
+
+        const loginResponse = await fetch("http://192.168.1.52:3001/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })

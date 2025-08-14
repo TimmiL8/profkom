@@ -4,6 +4,8 @@
     "name": "Похід у гори",
     "date": "2025-07-15",
     "place": "Карпати",
+    "price": "200/100",
+    "description": "Lalalalalalalalalalalalalala",
     "image": "https://images.unsplash.com/photo-1749587452499-ea1fd591e63f?q=80&w=1428&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   },
   {
@@ -11,6 +13,8 @@
     "name": "Літній фестиваль",
     "date": "2025-08-05",
     "place": "Івано-Франківськ",
+    "price": "200/100",
+    "description": "Bebebebebebebebebebebebebebebebe",
     "image": "https://images.unsplash.com/photo-1750008267598-7f68e1a25ab8?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   },
   {
@@ -18,6 +22,8 @@
     "name": "Кіно просто неба",
     "date": "2025-07-22",
     "place": "Львів",
+    "price": "",
+    "description": "Lalalalalalalalalalalalalala",
     "image": "https://images.unsplash.com/photo-1749802449762-5e428ccf9a45?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   }
 ]
