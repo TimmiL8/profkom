@@ -45,7 +45,7 @@ export default function SignUpPage() {
             body: JSON.stringify({ email, password })
         });
 
-        const loginResult = await loginResponse.json();
+        const loginResult = await loginR  esponse.json();
         if (loginResponse.ok) {
             localStorage.setItem("token", loginResult.token);
             navigate("/"); // 3. ПЕРЕХІД НА ГОЛОВНУ
