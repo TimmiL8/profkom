@@ -283,7 +283,7 @@ function CardsSkeleton() {
 function EmptyState() {
     return (
         <div className="rounded-2xl border border-dashed p-10 text-center text-neutral-600">
-            Поки що немає подій. Додай першу у розділі «Створити захід».
+            Поки що немає подій.
         </div>
     );
 }
