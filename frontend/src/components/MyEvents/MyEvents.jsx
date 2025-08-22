@@ -31,7 +31,6 @@ export default function MyEvents() {
         fetchSubscriptions();
     }, []);
 
-    // ---------- Парс дати/часу (локально, без UTC-зсувів) ----------
     function makeLocalDate(y, m, d, hh = 0, mm = 0) {
         const dt = new Date(y, m - 1, d, hh, mm, 0, 0);
         return Number.isNaN(dt.getTime()) ? new Date(NaN) : dt;
@@ -41,28 +40,24 @@ export default function MyEvents() {
         if (!dateStr || typeof dateStr !== "string") return new Date(NaN);
         const s = dateStr.trim();
 
-        // 2025-08-14T18:30 або "2025-08-14 18:30"
         if (/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}/.test(s)) {
             const safe = s.replace(" ", "T");
             const d = new Date(safe);
             return new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes());
         }
 
-        // 2025-08-14
         const mIso = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
         if (mIso) {
             const [, yy, mm, dd] = mIso;
             return makeLocalDate(+yy, +mm, +dd);
         }
 
-        // ДД.ММ.РРРР / ДД/ММ/РРРР / ДД-ΜΜ-РРРР
         const mEU = s.match(/^(\d{2})[.\-/](\d{2})[.\-/](\d{4})$/);
         if (mEU) {
             const [, dd, mm, yy] = mEU;
             return makeLocalDate(+yy, +mm, +dd);
         }
 
-        // РРРР.ММ.ДД
         const mYMD = s.match(/^(\d{4})[.\-/](\d{2})[.\-/](\d{2})$/);
         if (mYMD) {
             const [, yy, mm, dd] = mYMD;
@@ -96,11 +91,9 @@ export default function MyEvents() {
         if (hh !== null && mm !== null) {
             return new Date(base.getFullYear(), base.getMonth(), base.getDate(), hh, mm, 0, 0);
         }
-        // без часу — вважаємо 23:59, щоб подія стала «минулою» наступного дня
         return new Date(base.getFullYear(), base.getMonth(), base.getDate(), 23, 59, 0, 0);
     }
 
-    // ---------- Збагачення + групування ----------
     const grouped = useMemo(() => {
         const nowTs = Date.now();
         const enriched = events.map(ev => {
@@ -125,12 +118,10 @@ export default function MyEvents() {
         return { upcoming, past };
     }, [events]);
 
-    // ---------- Відписка (доступна лише для майбутніх) ----------
     const handleUnsubscribe = async (eventId) => {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        // оптимістично: видаляємо тільки з майбутніх, минулі не чіпаємо
         const prev = events;
         setEvents(list => list.filter(e => e.id !== eventId));
 
@@ -162,7 +153,6 @@ export default function MyEvents() {
                 <EmptyState />
             ) : (
                 <div className="space-y-10">
-                    {/* --------- Майбутні --------- */}
                     <section>
                         <div className="mb-3 flex items-center justify-between">
                             <h2 className="text-lg sm:text-xl font-semibold">Майбутні</h2>
@@ -185,7 +175,6 @@ export default function MyEvents() {
                         )}
                     </section>
 
-                    {/* --------- Минулі --------- */}
                     <section>
                         <div className="mb-3 flex items-center justify-between">
                             <h2 className="text-lg sm:text-xl font-semibold">Минулі</h2>
@@ -203,7 +192,6 @@ export default function MyEvents() {
                             >
                                 {grouped.past.map(e => (
                                     <PastCardWrapper key={e.id}>
-                                        {/* НЕ передаємо onUnsub → відписатися від минулих неможливо */}
                                         <EventSubCard event={e} />
                                     </PastCardWrapper>
                                 ))}
@@ -218,7 +206,6 @@ export default function MyEvents() {
     );
 }
 
-/* ---- Обгортка для минулих: grayscale + бейдж у лівому нижньому куті ---- */
 function PastCardWrapper({ children }) {
     return (
         <div className="relative">

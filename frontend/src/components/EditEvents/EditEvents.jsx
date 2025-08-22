@@ -14,7 +14,6 @@ export default function EditEvents() {
 
     const apiBase = "http://192.168.1.52:3001";
 
-    // ----------- API helper
     const api = (url, options = {}) => {
         const token = localStorage.getItem("token");
         return fetch(`${apiBase}${url}`, {
@@ -27,7 +26,6 @@ export default function EditEvents() {
         });
     };
 
-    // ----------- Load events
     async function fetchEvents() {
         try {
             setLoading(true);
@@ -40,7 +38,6 @@ export default function EditEvents() {
     }
     useEffect(() => { fetchEvents(); }, []);
 
-    // ----------- Date/Time utils
     const pad2 = (n) => String(n).padStart(2, "0");
     const toDateInput = (iso) => {
         if (!iso) return "";
@@ -58,7 +55,6 @@ export default function EditEvents() {
         return new Date(`${datePart}T${timePart}`).toISOString();
     };
 
-    // ----------- Display formatters
     const fmtDate = (iso) => {
         if (!iso) return "—";
         const d = new Date(iso);
@@ -70,7 +66,6 @@ export default function EditEvents() {
         return d.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit", hour12: false });
     };
 
-    // ----------- Search & Sort
     const filtered = useMemo(() => {
         const q = search.toLowerCase().trim();
         if (!q) return events;
@@ -101,7 +96,6 @@ export default function EditEvents() {
     const toggleSort = (key) =>
         setSortBy((p) => (p.key === key ? { key, dir: p.dir === "asc" ? "desc" : "asc" } : { key, dir: "asc" }));
 
-    // ----------- Delete
     const openConfirm = (id) => setConfirm({ open: true, id });
     const closeConfirm = () => setConfirm({ open: false, id: null });
 
@@ -119,7 +113,6 @@ export default function EditEvents() {
         }
     }
 
-    // ----------- Edit
     const startEdit = (e) => {
         setEditingId(e.id);
         setForm({

@@ -5,7 +5,6 @@ export default function EventsPage() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // -------- Фільтри --------
     const [status, setStatus] = useState("all"); // all | upcoming | past
     const [query, setQuery] = useState("");
     const [place, setPlace] = useState("");
@@ -25,7 +24,6 @@ export default function EventsPage() {
         fetchEvents();
     }, []);
 
-    // ---- Допоміжні парсери дати/часу (локальний час, без UTC-зсувів) ----
     function makeLocalDate(y, m, d, hh = 0, mm = 0) {
         // y: 4-значний, m: 1..12, d: 1..31
         const dt = new Date(y, m - 1, d, hh, mm, 0, 0);
@@ -36,35 +34,30 @@ export default function EventsPage() {
         if (!dateStr || typeof dateStr !== "string") return new Date(NaN);
         const s = dateStr.trim();
 
-        // ISO з часом: 2025-08-14T18:30 або "2025-08-14 18:30"
         if (/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}/.test(s)) {
             const safe = s.replace(" ", "T");
             const d = new Date(safe);
             return new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes());
         }
 
-        // ISO дата: 2025-08-14
         const mIso = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
         if (mIso) {
             const [, yy, mm, dd] = mIso;
             return makeLocalDate(+yy, +mm, +dd);
         }
 
-        // ДД.ММ.РРРР або ДД/ММ/РРРР або ДД-ΜΜ-РРРР
         const mEU = s.match(/^(\d{2})[.\-/](\d{2})[.\-/](\d{4})$/);
         if (mEU) {
             const [, dd, mm, yy] = mEU;
             return makeLocalDate(+yy, +mm, +dd);
         }
 
-        // РРРР.ММ.ДД
         const mYMD = s.match(/^(\d{4})[.\-/](\d{2})[.\-/](\d{2})$/);
         if (mYMD) {
             const [, yy, mm, dd] = mYMD;
             return makeLocalDate(+yy, +mm, +dd);
         }
 
-        // Фолбек на нативний парс (може дати NaN)
         const d = new Date(s);
         if (!Number.isNaN(d.getTime())) {
             return new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes());
@@ -88,24 +81,20 @@ export default function EventsPage() {
         const base = parseFlexibleDate(rawDate);
         if (Number.isNaN(base.getTime())) return new Date(NaN);
 
-        // Якщо є валідний час — встановлюємо його.
         const { hh, mm } = parseFlexibleTime(rawTime);
         if (hh !== null && mm !== null) {
             return new Date(base.getFullYear(), base.getMonth(), base.getDate(), hh, mm, 0, 0);
         }
 
-        // Якщо часу немає — вважаємо кінець дня (23:59), щоб подія стала "минулою" наступного дня.
         return new Date(base.getFullYear(), base.getMonth(), base.getDate(), 23, 59, 0, 0);
     }
 
-    // Унікальні локації для дропдауну
     const places = useMemo(() => {
         return Array.from(
             new Set(events.map(e => (e.place || "").trim()).filter(Boolean))
         ).sort((a, b) => a.localeCompare(b));
     }, [events]);
 
-    // Збагачуємо події службовими полями
     const enriched = useMemo(() => {
         const now = new Date();
         const nowTs = now.getTime();
@@ -118,7 +107,6 @@ export default function EventsPage() {
         });
     }, [events]);
 
-    // Фільтрація + сортування (новіші спочатку)
     const visible = useMemo(() => {
         let list = enriched;
 
@@ -126,7 +114,6 @@ export default function EventsPage() {
         if (status === "upcoming") list = list.filter(e => !e._isPast);
         if (status === "past") list = list.filter(e => e._isPast);
 
-        // Фільтр пошуку (по name/place)
         const q = query.trim().toLowerCase();
         if (q) {
             list = list.filter(e => {
@@ -136,18 +123,15 @@ export default function EventsPage() {
             });
         }
 
-        // Фільтр локації
         if (place) {
             list = list.filter(e => (e.place || "").trim() === place);
         }
 
-        // Сортування: від найновішого (більший timestamp) до найстарішого
         return list
             .slice()
             .sort((a, b) => {
                 const diff = b._ts - a._ts;
                 if (diff !== 0) return diff;
-                // Тай-брейк за назвою, щоб порядок був стабільний
                 return (a.name || "").localeCompare(b.name || "");
             });
     }, [enriched, status, query, place]);
@@ -157,16 +141,13 @@ export default function EventsPage() {
             <div className="mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Заходи</h1>
 
-                {/* Панель фільтрів */}
                 <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-3">
-                    {/* Статус */}
                     <div className="inline-flex rounded-xl bg-white ring-1 ring-neutral-200 p-1">
                         <FilterTab label="Усі" value="all" active={status === "all"} onClick={() => setStatus("all")} />
                         <FilterTab label="Майбутні" value="upcoming" active={status === "upcoming"} onClick={() => setStatus("upcoming")} />
                         <FilterTab label="Минулі" value="past" active={status === "past"} onClick={() => setStatus("past")} />
                     </div>
 
-                    {/* Пошук */}
                     <div className="flex-1 sm:flex-none">
                         <input
                             type="text"
@@ -213,16 +194,13 @@ export default function EventsPage() {
     );
 }
 
-/* ---------- Обгортка для бейджа та ефекту минулої події ---------- */
 function EventCardWrapper({ isPast, children }) {
     return (
         <div className="relative">
-            {/* Ефект ч/б + легке затемнення для минулих */}
             <div className={isPast ? "grayscale opacity-70 pointer-events-none" : ""}>
                 {children}
             </div>
 
-            {/* Бейдж "Відбувся" — в лівий нижній кут, щоб не перекривати ваші плашки зверху */}
             {isPast && (
                 <div className="pointer-events-none absolute left-3 bottom-3">
                     <span className="rounded-full bg-neutral-900/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white ring-1 ring-white/10">
@@ -234,7 +212,6 @@ function EventCardWrapper({ isPast, children }) {
     );
 }
 
-/* ---------- Кнопка вкладки для статус-фільтра ---------- */
 function FilterTab({ label, active, onClick }) {
     return (
         <button

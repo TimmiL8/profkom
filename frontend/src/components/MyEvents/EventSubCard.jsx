@@ -59,7 +59,6 @@ export default function EventSubCard({ event, onUnsub }) {
     );
 }
 
-// ———— Reuse utils ————
 function formatDateParts(raw) {
     if (!raw) return { dateStr: "—", timeStr: "", chip: null };
     const d = new Date(raw);

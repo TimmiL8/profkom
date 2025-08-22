@@ -20,10 +20,8 @@ export default function EventCard({ event }) {
     return (
         <Link to={`/events/${id}`} className="group block">
             <article className="relative overflow-hidden rounded-2xl bg-white shadow-[0_6px_24px_rgba(0,0,0,0.12)] ring-1 ring-neutral-200 transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(0,0,0,0.14)]">
-                {/* Image */}
                 <div className="relative aspect-[4/3] w-full overflow-hidden">
                     <img src={cover} alt={name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
-                    {/* Top chips */}
                     <div className="pointer-events-none absolute left-3 top-3 flex gap-2">
                         {chip && (
                             <span className="rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold shadow-sm ring-1 ring-black/5">
@@ -34,11 +32,9 @@ export default function EventCard({ event }) {
               {priceStr}
             </span>
                     </div>
-                    {/* Gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 </div>
 
-                {/* Body */}
                 <div className="p-4">
                     <h3 className="line-clamp-2 min-h-[3.2rem] text-lg font-bold tracking-tight">
                         {name}

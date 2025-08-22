@@ -12,14 +12,11 @@ export default function CreateEvent() {
     const [image, setImage] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [message, setMessage] = useState("");
-
-    // auth
     const [jwt, setJwt] = useState("");
 
     const fileInputRef = useRef(null);
     const pasteZoneRef = useRef(null);
 
-    // ---- Helpers
     function readFileAsDataURL(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -29,31 +26,26 @@ export default function CreateEvent() {
         });
     }
 
-    // Санітизація ціни: лише цифри, одна крапка/кома, до 2 знаків після
     function sanitizePrice(input) {
         if (typeof input !== "string") input = String(input ?? "");
-        let s = input.replace(",", ".");           // кома -> крапка
-        s = s.replace(/[^\d.]/g, "");              // прибрати все, крім цифр та крапки
+        let s = input.replace(",", ".");
+        s = s.replace(/[^\d.]/g, "");
 
-        // дозволити лише одну крапку
         const parts = s.split(".");
         if (parts.length > 2) {
             s = parts[0] + "." + parts.slice(1).join("");
         }
 
-        // обмежити 2 знаками після крапки
         const [intPart, fracPart] = s.split(".");
         if (fracPart !== undefined) {
             s = intPart + "." + fracPart.slice(0, 2);
         }
 
-        // не дозволяти самотню крапку
         if (s === ".") s = "";
 
         return s;
     }
 
-    // ---- Load token from storage on mount
     useEffect(() => {
         const fromStorage =
             localStorage.getItem("jwt") ||
@@ -64,12 +56,10 @@ export default function CreateEvent() {
         if (fromStorage) setJwt(fromStorage);
     }, []);
 
-    // ---- Persist token when user edits
     useEffect(() => {
         if (jwt) localStorage.setItem("jwt", jwt);
     }, [jwt]);
 
-    // ---- Quick token check
     useEffect(() => {
         if (!jwt) return;
         fetch(`${apiBase}/me`, { headers: { Authorization: `Bearer ${jwt}` } })
@@ -109,7 +99,6 @@ export default function CreateEvent() {
     }
 
     function handlePriceKeyDown(e) {
-        // Заборонити будь-що, крім цифр, крапки/коми, службових клавіш і комбінацій Ctrl/Cmd+A/C/V/X
         const allowedNav = ["Backspace","Delete","ArrowLeft","ArrowRight","Home","End","Tab"];
         if (allowedNav.includes(e.key)) return;
 
@@ -135,7 +124,6 @@ export default function CreateEvent() {
             setMessage("Заповни назву, дату, місце і додай фото");
             return;
         }
-        // Фінальна перевірка ціни (за потреби — порожнє значення допустиме)
         if (price && !/^\d+(\.\d{1,2})?$/.test(price)) {
             setMessage("Ціна має містити лише цифри (до 2 знаків після коми)");
             return;
@@ -160,7 +148,7 @@ export default function CreateEvent() {
                     name,
                     date: isoDate,
                     place,
-                    price, // вже санітайзена строка (наприклад "150" або "99.90")
+                    price,
                     description,
                     image,
                 }),
@@ -211,7 +199,6 @@ export default function CreateEvent() {
         </span>
             </div>
 
-            {/* JWT input */}
             <div className="mb-8">
                 <label className="block">
                     <div className="mb-1 text-sm text-gray-700">JWT (Bearer)</div>
@@ -229,7 +216,6 @@ export default function CreateEvent() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                {/* LEFT — form */}
                 <div className="space-y-5">
                     <Field label="назва заходу">
                         <input
@@ -328,7 +314,6 @@ export default function CreateEvent() {
                     {message && <p className="text-sm text-gray-700 pt-2">{message}</p>}
                 </div>
 
-                {/* RIGHT — live preview */}
                 <aside className="order-first md:order-none">
                     <div className="rounded-2xl border bg-white shadow-sm overflow-hidden">
                         <div className="p-6">
