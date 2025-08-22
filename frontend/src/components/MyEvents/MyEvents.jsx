@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import EventSubCard from "./EventSubCard.jsx";
 
 export default function MyEvents() {
@@ -16,7 +16,7 @@ export default function MyEvents() {
         try {
             setLoading(true);
             const res = await fetch("http://192.168.1.52:3001/my-subscriptions", {
-                headers: { Authorization: "Bearer " + token },
+                headers: {Authorization: "Bearer " + token},
             });
             const data = await res.json();
             setEvents(Array.isArray(data) ? data : []);
@@ -72,13 +72,13 @@ export default function MyEvents() {
     }
 
     function parseFlexibleTime(timeStr) {
-        if (!timeStr || typeof timeStr !== "string") return { hh: null, mm: null };
+        if (!timeStr || typeof timeStr !== "string") return {hh: null, mm: null};
         const s = timeStr.trim();
         const m = s.match(/^(\d{1,2}):(\d{2})$/);
-        if (!m) return { hh: null, mm: null };
+        if (!m) return {hh: null, mm: null};
         const hh = Math.max(0, Math.min(23, parseInt(m[1], 10)));
         const mm = Math.max(0, Math.min(59, parseInt(m[2], 10)));
-        return { hh, mm };
+        return {hh, mm};
     }
 
     function getEventDate(ev) {
@@ -87,7 +87,7 @@ export default function MyEvents() {
         const base = parseFlexibleDate(rawDate);
         if (Number.isNaN(base.getTime())) return new Date(NaN);
 
-        const { hh, mm } = parseFlexibleTime(rawTime);
+        const {hh, mm} = parseFlexibleTime(rawTime);
         if (hh !== null && mm !== null) {
             return new Date(base.getFullYear(), base.getMonth(), base.getDate(), hh, mm, 0, 0);
         }
@@ -115,7 +115,7 @@ export default function MyEvents() {
             .filter(e => e._isPast)
             .sort((a, b) => b._ts - a._ts || (a.name || "").localeCompare(b.name || ""));
 
-        return { upcoming, past };
+        return {upcoming, past};
     }, [events]);
 
     const handleUnsubscribe = async (eventId) => {
@@ -132,13 +132,13 @@ export default function MyEvents() {
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + token,
                 },
-                body: JSON.stringify({ event_id: eventId }),
+                body: JSON.stringify({event_id: eventId}),
             });
             if (!res.ok) throw new Error("Unsubscribe failed");
             setMessage("Відписано від події");
         } catch (e) {
             console.error(e);
-            setEvents(prev); // rollback
+            setEvents(prev);
             setMessage("Сталася помилка при відписці");
         }
     };
@@ -148,9 +148,9 @@ export default function MyEvents() {
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-6">Мої підписки</h1>
 
             {loading ? (
-                <CardsSkeleton />
+                <CardsSkeleton/>
             ) : (grouped.upcoming.length === 0 && grouped.past.length === 0) ? (
-                <EmptyState />
+                <EmptyState/>
             ) : (
                 <div className="space-y-10">
                     <section>
@@ -166,10 +166,10 @@ export default function MyEvents() {
                         ) : (
                             <div
                                 className="grid gap-6 sm:gap-8"
-                                style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}
+                                style={{gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))"}}
                             >
                                 {grouped.upcoming.map(e => (
-                                    <EventSubCard key={e.id} event={e} onUnsub={() => handleUnsubscribe(e.id)} />
+                                    <EventSubCard key={e.id} event={e} onUnsub={() => handleUnsubscribe(e.id)}/>
                                 ))}
                             </div>
                         )}
@@ -188,11 +188,11 @@ export default function MyEvents() {
                         ) : (
                             <div
                                 className="grid gap-6 sm:gap-8"
-                                style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}
+                                style={{gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))"}}
                             >
                                 {grouped.past.map(e => (
                                     <PastCardWrapper key={e.id}>
-                                        <EventSubCard event={e} />
+                                        <EventSubCard event={e}/>
                                     </PastCardWrapper>
                                 ))}
                             </div>
@@ -206,14 +206,15 @@ export default function MyEvents() {
     );
 }
 
-function PastCardWrapper({ children }) {
+function PastCardWrapper({children}) {
     return (
         <div className="relative">
             <div className="grayscale opacity-70 pointer-events-none">
                 {children}
             </div>
             <div className="pointer-events-none absolute left-3 bottom-3">
-                <span className="rounded-full bg-neutral-900/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white ring-1 ring-white/10">
+                <span
+                    className="rounded-full bg-neutral-900/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white ring-1 ring-white/10">
                     Відбувся
                 </span>
             </div>
@@ -225,22 +226,22 @@ function CardsSkeleton() {
     return (
         <div
             className="grid gap-6 sm:gap-8"
-            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}
+            style={{gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))"}}
         >
-            {Array.from({ length: 8 }).map((_, i) => (
+            {Array.from({length: 8}).map((_, i) => (
                 <div key={i} className="animate-pulse overflow-hidden rounded-2xl bg-white ring-1 ring-neutral-200">
-                    <div className="aspect-[4/3] w-full bg-neutral-200" />
+                    <div className="aspect-[4/3] w-full bg-neutral-200"/>
                     <div className="p-4 space-y-3">
-                        <div className="h-5 w-4/5 rounded bg-neutral-200" />
+                        <div className="h-5 w-4/5 rounded bg-neutral-200"/>
                         <div className="grid grid-cols-[20px_1fr] gap-2">
-                            <div className="h-4 rounded bg-neutral-200" />
-                            <div className="h-4 rounded bg-neutral-200" />
+                            <div className="h-4 rounded bg-neutral-200"/>
+                            <div className="h-4 rounded bg-neutral-200"/>
                         </div>
                         <div className="grid grid-cols-[20px_1fr] gap-2">
-                            <div className="h-4 rounded bg-neutral-200" />
-                            <div className="h-4 rounded bg-neutral-200" />
+                            <div className="h-4 rounded bg-neutral-200"/>
+                            <div className="h-4 rounded bg-neutral-200"/>
                         </div>
-                        <div className="h-5 w-24 rounded bg-neutral-200" />
+                        <div className="h-5 w-24 rounded bg-neutral-200"/>
                     </div>
                 </div>
             ))}

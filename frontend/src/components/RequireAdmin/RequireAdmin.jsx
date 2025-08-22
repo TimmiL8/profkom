@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useEffect, useRef, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 const API = "http://192.168.1.52:3001";
 
-// --- helpers ---
 function parseJwt(token) {
     try {
         const [, payload] = token.split(".");
@@ -12,17 +11,17 @@ function parseJwt(token) {
         return null;
     }
 }
+
 function isExpired(token) {
     const p = parseJwt(token);
     if (!p?.exp) return true;
     const now = Math.floor(Date.now() / 1000);
-    // невеликий буфер на годинники/мережу
     return p.exp < now + 5;
 }
 
-export default function RequireAdmin({ children }) {
+export default function RequireAdmin({children}) {
     const navigate = useNavigate();
-    const [status, setStatus] = useState("checking"); // 'checking' | 'ok'
+    const [status, setStatus] = useState("checking");
     const aborted = useRef(false);
 
     useEffect(() => {
@@ -31,13 +30,11 @@ export default function RequireAdmin({ children }) {
         const run = async () => {
             const token = localStorage.getItem("token");
 
-            // 1) нема токена — на головну
             if (!token) {
                 navigate("/");
                 return;
             }
 
-            // 2) токен протух — пробуємо оновити, або логутаут
             if (isExpired(token)) {
                 const refreshed = await tryRefreshToken();
                 if (!refreshed) {
@@ -47,10 +44,8 @@ export default function RequireAdmin({ children }) {
                 }
             }
 
-            // 3) перевіряємо /me
             const ok = await checkMe();
             if (!ok) {
-                // остання спроба: можливо токен став невалідним між часом перевірок
                 const refreshed = await tryRefreshToken();
                 if (refreshed) {
                     const ok2 = await checkMe();
@@ -73,7 +68,6 @@ export default function RequireAdmin({ children }) {
         };
     }, [navigate]);
 
-    // запит до /me із захистом від не-ok
     async function checkMe() {
         const token = localStorage.getItem("token");
         if (!token) return false;
@@ -95,10 +89,9 @@ export default function RequireAdmin({ children }) {
         }
     }
 
-    // опційний рефреш (працює лише якщо такий ендпоїнт є; інакше завжди false)
     async function tryRefreshToken() {
         try {
-            const res = await fetch(`${API}/refresh`, { method: "POST", credentials: "include" });
+            const res = await fetch(`${API}/refresh`, {method: "POST", credentials: "include"});
             if (!res.ok) return false;
             const data = await res.json().catch(() => ({}));
             if (data?.token) {
@@ -111,7 +104,6 @@ export default function RequireAdmin({ children }) {
         }
     }
 
-    // поки перевіряємо — нічого не рендеримо (щоб не було 403 у консолі та мерехтіння)
     if (status !== "ok") return null;
 
     return children;

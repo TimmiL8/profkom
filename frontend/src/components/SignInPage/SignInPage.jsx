@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate, Link} from "react-router-dom";
 
 export default function SignInPage() {
     const navigate = useNavigate();
@@ -19,8 +19,8 @@ export default function SignInPage() {
         try {
             const response = await fetch("http://192.168.1.52:3001/login", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({email, password}),
             });
             const result = await response.json();
             if (response.ok) {
@@ -42,7 +42,7 @@ export default function SignInPage() {
         bg-neutral-900/95 backdrop-blur
         shadow-[0_8px_30px_rgba(0,0,0,.45)]
       ">
-                <div className="pointer-events-none absolute inset-2 rounded-xl border border-neutral-800/80" />
+                <div className="pointer-events-none absolute inset-2 rounded-xl border border-neutral-800/80"/>
 
                 <form onSubmit={submit} className="relative z-10 p-4 sm:p-8 flex flex-col gap-3 sm:gap-5">
                     <header className="text-center mb-1 sm:mb-2">
@@ -67,7 +67,8 @@ export default function SignInPage() {
                             autoComplete="email"
                             required
                         />
-                        <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-neutral-500">@</span>
+                        <span
+                            className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-neutral-500">@</span>
                     </div>
 
                     <label className="text-neutral-300 text-sm" htmlFor="password">Password</label>
@@ -98,13 +99,15 @@ export default function SignInPage() {
                     </div>
 
                     {err && (
-                        <div className="text-sm text-red-300 bg-red-900/40 border border-red-700/50 rounded-md px-3 py-2">
+                        <div
+                            className="text-sm text-red-300 bg-red-900/40 border border-red-700/50 rounded-md px-3 py-2">
                             {err}
                         </div>
                     )}
 
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-                        <Link to="/sign-up" className="text-neutral-300 hover:text-neutral-100 text-sm text-center sm:text-left">
+                        <Link to="/sign-up"
+                              className="text-neutral-300 hover:text-neutral-100 text-sm text-center sm:text-left">
                             Don’t have an account?
                         </Link>
                     </div>

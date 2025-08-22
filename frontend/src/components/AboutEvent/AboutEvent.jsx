@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, {useEffect, useMemo, useState} from "react";
+import {useParams, Link} from "react-router-dom";
 
 export default function AboutEvent() {
-    const { aboutEvent } = useParams();
+    const {aboutEvent} = useParams();
     const [event, setEvent] = useState(null);
     const [subscribed, setSubscribed] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -29,11 +29,12 @@ export default function AboutEvent() {
         const token = localStorage.getItem("token");
         if (!token) return;
         fetch(`http://192.168.1.52:3001/subscriptions/${event.id}`, {
-            headers: { Authorization: "Bearer " + token },
+            headers: {Authorization: "Bearer " + token},
         })
             .then((r) => r.json())
             .then((d) => setSubscribed(!!d?.subscribed))
-            .catch(() => {});
+            .catch(() => {
+            });
     }, [event]);
 
     const handleSubscribe = async () => {
@@ -45,7 +46,7 @@ export default function AboutEvent() {
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + token,
                 },
-                body: JSON.stringify({ event_id: event.id }),
+                body: JSON.stringify({event_id: event.id}),
             });
             setSubscribed(true);
         } catch (e) {
@@ -55,8 +56,11 @@ export default function AboutEvent() {
 
     const details = useMemo(() => {
         const dt = event?.date ? new Date(event.date) : null;
-        const dateStr = dt ? dt.toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", year: "numeric" }) : "—";
-        const timeStr = dt ? dt.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" }) : (event?.time || "—");
+        const dateStr = dt ? dt.toLocaleDateString("uk-UA", {day: "2-digit", month: "2-digit", year: "numeric"}) : "—";
+        const timeStr = dt ? dt.toLocaleTimeString("uk-UA", {
+            hour: "2-digit",
+            minute: "2-digit"
+        }) : (event?.time || "—");
         return {
             date: dateStr,
             time: timeStr,
@@ -74,8 +78,12 @@ export default function AboutEvent() {
     return (
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
             <div className="mb-6">
-                <Link to="/events" className="inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <Link to="/events"
+                      className="inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                         strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
                     Назад до заходів
                 </Link>
             </div>
@@ -83,7 +91,7 @@ export default function AboutEvent() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
                 <section>
                     {loading ? (
-                        <Skeleton />
+                        <Skeleton/>
                     ) : (
                         <>
                             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 mb-4">
@@ -93,17 +101,18 @@ export default function AboutEvent() {
                             <p className="text-[15px] leading-6 text-neutral-700 mb-5">
                                 {event?.description || (
                                     <>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus hendrerit, lacus eu faucibus
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus hendrerit,
+                                        lacus eu faucibus
                                         placerat, neque est pulvinar nisl, ac molestie justo dui non tellus.
                                     </>
                                 )}
                             </p>
 
                             <dl className="mt-6 space-y-3 text-[15px]">
-                                <Row label="дата" value={details.date} />
-                                <Row label="час" value={details.time} />
-                                <Row label="місце" value={details.place} />
-                                <Row label="ціна" value={details.price} />
+                                <Row label="дата" value={details.date}/>
+                                <Row label="час" value={details.time}/>
+                                <Row label="місце" value={details.place}/>
+                                <Row label="ціна" value={details.price}/>
                             </dl>
 
                             <div className="mt-7">
@@ -134,7 +143,7 @@ export default function AboutEvent() {
     );
 }
 
-function Row({ label, value }) {
+function Row({label, value}) {
     return (
         <div className="grid grid-cols-[80px_1fr] gap-4">
             <dt className="uppercase tracking-wide text-neutral-500">{label}</dt>
@@ -146,19 +155,19 @@ function Row({ label, value }) {
 function Skeleton() {
     return (
         <div className="animate-pulse">
-            <div className="h-8 w-2/3 rounded bg-neutral-200 mb-4" />
-            <div className="h-4 w-full rounded bg-neutral-200 mb-2" />
-            <div className="h-4 w-11/12 rounded bg-neutral-200 mb-2" />
-            <div className="h-4 w-10/12 rounded bg-neutral-200 mb-6" />
+            <div className="h-8 w-2/3 rounded bg-neutral-200 mb-4"/>
+            <div className="h-4 w-full rounded bg-neutral-200 mb-2"/>
+            <div className="h-4 w-11/12 rounded bg-neutral-200 mb-2"/>
+            <div className="h-4 w-10/12 rounded bg-neutral-200 mb-6"/>
             <div className="space-y-3">
                 {[...Array(4)].map((_, i) => (
                     <div key={i} className="grid grid-cols-[80px_1fr] gap-4 items-center">
-                        <div className="h-4 rounded bg-neutral-200" />
-                        <div className="h-4 rounded bg-neutral-200" />
+                        <div className="h-4 rounded bg-neutral-200"/>
+                        <div className="h-4 rounded bg-neutral-200"/>
                     </div>
                 ))}
             </div>
-            <div className="mt-7 h-11 w-48 rounded-2xl bg-neutral-200" />
+            <div className="mt-7 h-11 w-48 rounded-2xl bg-neutral-200"/>
         </div>
     );
 }

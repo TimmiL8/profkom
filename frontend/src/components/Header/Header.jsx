@@ -1,7 +1,7 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import { useLocation } from "react-router-dom";
+import {Link, useNavigate} from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {jwtDecode} from 'jwt-decode';
+import {useLocation} from "react-router-dom";
 import logo from "../../assets/icons/profkom-logo.svg"
 
 export default function Header() {
@@ -34,7 +34,7 @@ export default function Header() {
             <div className="mx-auto px-6 py-4 flex items-center justify-between">
 
                 <div className="flex items-center gap-2">
-                    <Link to="/"><img src={logo} alt="Student Union Logo" className="h-14 w-auto" /></Link>
+                    <Link to="/"><img src={logo} alt="Student Union Logo" className="h-14 w-auto"/></Link>
 
                 </div>
 
@@ -58,13 +58,13 @@ export default function Header() {
                             strokeLinejoin="round"
                             className={`w-8 h-8 transition-transform duration-300 ${isOpen ? "rotate-90" : ""}`}
                         >
-                            <path d="M3 6h18" />
-                            <path d="M3 12h18" />
-                            <path d="M3 18h18" />
+                            <path d="M3 6h18"/>
+                            <path d="M3 12h18"/>
+                            <path d="M3 18h18"/>
                         </svg>
                     </button>
                 </div>
-                </div>
+            </div>
 
             <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out px-6 ${
@@ -72,11 +72,14 @@ export default function Header() {
                 } flex flex-col gap-4 text-xl text-neutral-800 font-medium`}
             >
                 <Link to="/" className={location.pathname === "/" ? "font-bold md:hidden" : "md:hidden"}>Головна</Link>
-                <Link to="/events" className={location.pathname === "/events" ? "font-bold md:hidden" : "md:hidden"}>Заходи</Link>
+                <Link to="/events"
+                      className={location.pathname === "/events" ? "font-bold md:hidden" : "md:hidden"}>Заходи</Link>
                 {user?.isAdmin && (
                     <>
-                        <Link to="/create-event" className={location.pathname === "/create-event" ? "font-bold" : ""}>Create</Link>
-                        <Link to="/edit-events" className={location.pathname === "/edit-events" ? "font-bold" : ""}>Edit</Link>
+                        <Link to="/create-event"
+                              className={location.pathname === "/create-event" ? "font-bold" : ""}>Create</Link>
+                        <Link to="/edit-events"
+                              className={location.pathname === "/edit-events" ? "font-bold" : ""}>Edit</Link>
                     </>
                 )}
                 {user ? (

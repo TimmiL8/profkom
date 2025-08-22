@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import EventCard from "./EventCard.jsx";
 
 export default function EventsPage() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const [status, setStatus] = useState("all"); // all | upcoming | past
+    const [status, setStatus] = useState("all");
     const [query, setQuery] = useState("");
     const [place, setPlace] = useState("");
 
@@ -25,7 +25,6 @@ export default function EventsPage() {
     }, []);
 
     function makeLocalDate(y, m, d, hh = 0, mm = 0) {
-        // y: 4-значний, m: 1..12, d: 1..31
         const dt = new Date(y, m - 1, d, hh, mm, 0, 0);
         return Number.isNaN(dt.getTime()) ? new Date(NaN) : dt;
     }
@@ -66,13 +65,13 @@ export default function EventsPage() {
     }
 
     function parseFlexibleTime(timeStr) {
-        if (!timeStr || typeof timeStr !== "string") return { hh: null, mm: null };
+        if (!timeStr || typeof timeStr !== "string") return {hh: null, mm: null};
         const s = timeStr.trim();
         const m = s.match(/^(\d{1,2}):(\d{2})$/);
-        if (!m) return { hh: null, mm: null };
+        if (!m) return {hh: null, mm: null};
         const hh = Math.max(0, Math.min(23, parseInt(m[1], 10)));
         const mm = Math.max(0, Math.min(59, parseInt(m[2], 10)));
-        return { hh, mm };
+        return {hh, mm};
     }
 
     function getEventDate(ev) {
@@ -81,7 +80,7 @@ export default function EventsPage() {
         const base = parseFlexibleDate(rawDate);
         if (Number.isNaN(base.getTime())) return new Date(NaN);
 
-        const { hh, mm } = parseFlexibleTime(rawTime);
+        const {hh, mm} = parseFlexibleTime(rawTime);
         if (hh !== null && mm !== null) {
             return new Date(base.getFullYear(), base.getMonth(), base.getDate(), hh, mm, 0, 0);
         }
@@ -103,14 +102,13 @@ export default function EventsPage() {
             const ts = dateObj.getTime();
             const valid = Number.isFinite(ts);
             const isPast = valid ? ts < nowTs : false;
-            return { ...ev, _dateObj: dateObj, _ts: valid ? ts : Number.NEGATIVE_INFINITY, _isPast: isPast };
+            return {...ev, _dateObj: dateObj, _ts: valid ? ts : Number.NEGATIVE_INFINITY, _isPast: isPast};
         });
     }, [events]);
 
     const visible = useMemo(() => {
         let list = enriched;
 
-        // Фільтр статусу
         if (status === "upcoming") list = list.filter(e => !e._isPast);
         if (status === "past") list = list.filter(e => e._isPast);
 
@@ -143,9 +141,11 @@ export default function EventsPage() {
 
                 <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-3">
                     <div className="inline-flex rounded-xl bg-white ring-1 ring-neutral-200 p-1">
-                        <FilterTab label="Усі" value="all" active={status === "all"} onClick={() => setStatus("all")} />
-                        <FilterTab label="Майбутні" value="upcoming" active={status === "upcoming"} onClick={() => setStatus("upcoming")} />
-                        <FilterTab label="Минулі" value="past" active={status === "past"} onClick={() => setStatus("past")} />
+                        <FilterTab label="Усі" value="all" active={status === "all"} onClick={() => setStatus("all")}/>
+                        <FilterTab label="Майбутні" value="upcoming" active={status === "upcoming"}
+                                   onClick={() => setStatus("upcoming")}/>
+                        <FilterTab label="Минулі" value="past" active={status === "past"}
+                                   onClick={() => setStatus("past")}/>
                     </div>
 
                     <div className="flex-1 sm:flex-none">
@@ -158,7 +158,6 @@ export default function EventsPage() {
                         />
                     </div>
 
-                    {/* Локація */}
                     <div>
                         <select
                             value={place}
@@ -175,17 +174,17 @@ export default function EventsPage() {
             </div>
 
             {loading ? (
-                <CardsSkeleton />
+                <CardsSkeleton/>
             ) : visible.length === 0 ? (
-                <EmptyState />
+                <EmptyState/>
             ) : (
                 <div
                     className="grid gap-6 sm:gap-8"
-                    style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}
+                    style={{gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))"}}
                 >
                     {visible.map((e) => (
                         <EventCardWrapper key={e.id} isPast={e._isPast}>
-                            <EventCard event={e} />
+                            <EventCard event={e}/>
                         </EventCardWrapper>
                     ))}
                 </div>
@@ -194,7 +193,7 @@ export default function EventsPage() {
     );
 }
 
-function EventCardWrapper({ isPast, children }) {
+function EventCardWrapper({isPast, children}) {
     return (
         <div className="relative">
             <div className={isPast ? "grayscale opacity-70 pointer-events-none" : ""}>
@@ -203,7 +202,8 @@ function EventCardWrapper({ isPast, children }) {
 
             {isPast && (
                 <div className="pointer-events-none absolute left-3 bottom-3">
-                    <span className="rounded-full bg-neutral-900/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white ring-1 ring-white/10">
+                    <span
+                        className="rounded-full bg-neutral-900/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white ring-1 ring-white/10">
                         Відбувся
                     </span>
                 </div>
@@ -212,7 +212,7 @@ function EventCardWrapper({ isPast, children }) {
     );
 }
 
-function FilterTab({ label, active, onClick }) {
+function FilterTab({label, active, onClick}) {
     return (
         <button
             type="button"
@@ -234,22 +234,22 @@ function CardsSkeleton() {
     return (
         <div
             className="grid gap-6 sm:gap-8"
-            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}
+            style={{gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))"}}
         >
-            {Array.from({ length: 8 }).map((_, i) => (
+            {Array.from({length: 8}).map((_, i) => (
                 <div key={i} className="animate-pulse overflow-hidden rounded-2xl bg-white ring-1 ring-neutral-200">
-                    <div className="aspect-[4/3] w-full bg-neutral-200" />
+                    <div className="aspect-[4/3] w-full bg-neutral-200"/>
                     <div className="p-4 space-y-3">
-                        <div className="h-5 w-4/5 rounded bg-neutral-200" />
+                        <div className="h-5 w-4/5 rounded bg-neutral-200"/>
                         <div className="grid grid-cols-[20px_1fr] gap-2">
-                            <div className="h-4 rounded bg-neutral-200" />
-                            <div className="h-4 rounded bg-neutral-200" />
+                            <div className="h-4 rounded bg-neutral-200"/>
+                            <div className="h-4 rounded bg-neutral-200"/>
                         </div>
                         <div className="grid grid-cols-[20px_1fr] gap-2">
-                            <div className="h-4 rounded bg-neutral-200" />
-                            <div className="h-4 rounded bg-neutral-200" />
+                            <div className="h-4 rounded bg-neutral-200"/>
+                            <div className="h-4 rounded bg-neutral-200"/>
                         </div>
-                        <div className="h-5 w-24 rounded bg-neutral-200" />
+                        <div className="h-5 w-24 rounded bg-neutral-200"/>
                     </div>
                 </div>
             ))}

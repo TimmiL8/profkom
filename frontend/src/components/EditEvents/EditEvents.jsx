@@ -1,16 +1,16 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { createPortal } from "react-dom";
+import React, {useEffect, useMemo, useState} from "react";
+import {createPortal} from "react-dom";
 
 export default function EditEvents() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
-    const [sortBy, setSortBy] = useState({ key: "date", dir: "asc" });
+    const [sortBy, setSortBy] = useState({key: "date", dir: "asc"});
 
-    const [confirm, setConfirm] = useState({ open: false, id: null });
+    const [confirm, setConfirm] = useState({open: false, id: null});
 
     const [editingId, setEditingId] = useState(null);
-    const [form, setForm] = useState({ name: "", place: "", date: "", time: "", price: "" });
+    const [form, setForm] = useState({name: "", place: "", date: "", time: "", price: ""});
 
     const apiBase = "http://192.168.1.52:3001";
 
@@ -21,7 +21,7 @@ export default function EditEvents() {
             headers: {
                 "Content-Type": "application/json",
                 ...(options.headers || {}),
-                ...(token ? { Authorization: "Bearer " + token } : {}),
+                ...(token ? {Authorization: "Bearer " + token} : {}),
             },
         });
     };
@@ -36,7 +36,10 @@ export default function EditEvents() {
             setLoading(false);
         }
     }
-    useEffect(() => { fetchEvents(); }, []);
+
+    useEffect(() => {
+        fetchEvents();
+    }, []);
 
     const pad2 = (n) => String(n).padStart(2, "0");
     const toDateInput = (iso) => {
@@ -58,12 +61,12 @@ export default function EditEvents() {
     const fmtDate = (iso) => {
         if (!iso) return "—";
         const d = new Date(iso);
-        return d.toLocaleDateString("uk-UA", { year: "numeric", month: "2-digit", day: "2-digit" });
+        return d.toLocaleDateString("uk-UA", {year: "numeric", month: "2-digit", day: "2-digit"});
     };
     const fmtTime = (iso) => {
         if (!iso) return "";
         const d = new Date(iso);
-        return d.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit", hour12: false });
+        return d.toLocaleTimeString("uk-UA", {hour: "2-digit", minute: "2-digit", hour12: false});
     };
 
     const filtered = useMemo(() => {
@@ -76,7 +79,7 @@ export default function EditEvents() {
 
     const sorted = useMemo(() => {
         const arr = [...filtered];
-        const { key, dir } = sortBy;
+        const {key, dir} = sortBy;
         arr.sort((a, b) => {
             let av = a[key], bv = b[key];
             if (key === "date") {
@@ -94,10 +97,10 @@ export default function EditEvents() {
     }, [filtered, sortBy]);
 
     const toggleSort = (key) =>
-        setSortBy((p) => (p.key === key ? { key, dir: p.dir === "asc" ? "desc" : "asc" } : { key, dir: "asc" }));
+        setSortBy((p) => (p.key === key ? {key, dir: p.dir === "asc" ? "desc" : "asc"} : {key, dir: "asc"}));
 
-    const openConfirm = (id) => setConfirm({ open: true, id });
-    const closeConfirm = () => setConfirm({ open: false, id: null });
+    const openConfirm = (id) => setConfirm({open: true, id});
+    const closeConfirm = () => setConfirm({open: false, id: null});
 
     async function deleteConfirmed() {
         const id = confirm.id;
@@ -105,7 +108,7 @@ export default function EditEvents() {
         const prev = events;
         setEvents((list) => list.filter((e) => e.id !== id));
         try {
-            const res = await api(`/events/${id}`, { method: "DELETE" });
+            const res = await api(`/events/${id}`, {method: "DELETE"});
             if (!res.ok) throw new Error("Delete failed");
         } catch (e) {
             setEvents(prev);
@@ -118,22 +121,21 @@ export default function EditEvents() {
         setForm({
             name: e.name || "",
             place: e.place || "",
-            date: toDateInput(e.date),          // <-- додали
-            time: toTimeInput(e.date),          // <-- залишили/уніфікували
+            date: toDateInput(e.date),
+            time: toTimeInput(e.date),
             price: e.price != null ? String(e.price) : "",
         });
     };
 
     const cancelEdit = () => {
         setEditingId(null);
-        setForm({ name: "", place: "", date: "", time: "", price: "" });
+        setForm({name: "", place: "", date: "", time: "", price: ""});
     };
 
     async function saveEdit(id) {
         const current = events.find((x) => x.id === id);
         if (!current) return;
 
-        // Сформувати новий ISO з (нової або старої) дати й часу
         const desiredDate = form.date || toDateInput(current.date);
         const desiredTime = form.time || toTimeInput(current.date);
         const nextISO = composeISO(desiredDate, desiredTime);
@@ -147,7 +149,7 @@ export default function EditEvents() {
 
         const prev = events;
         setEvents((list) =>
-            list.map((e) => (e.id === id ? { ...e, ...payload } : e))
+            list.map((e) => (e.id === id ? {...e, ...payload} : e))
         );
 
         try {
@@ -189,17 +191,22 @@ export default function EditEvents() {
                         <thead className="sticky top-0 z-10 bg-neutral-50/90 backdrop-blur">
                         <tr className="text-left">
                             <Th onClick={() => toggleSort("name")} sortable sort={sortBy} field="name">Назва</Th>
-                            <Th onClick={() => toggleSort("date")} sortable sort={sortBy} field="date" w="220px">Дата/час</Th>
-                            <Th onClick={() => toggleSort("place")} sortable sort={sortBy} field="place" w="220px">Місце</Th>
-                            <Th onClick={() => toggleSort("price")} sortable sort={sortBy} field="price" w="120px">Ціна</Th>
+                            <Th onClick={() => toggleSort("date")} sortable sort={sortBy} field="date"
+                                w="220px">Дата/час</Th>
+                            <Th onClick={() => toggleSort("place")} sortable sort={sortBy} field="place"
+                                w="220px">Місце</Th>
+                            <Th onClick={() => toggleSort("price")} sortable sort={sortBy} field="price"
+                                w="120px">Ціна</Th>
                             <Th w="160px">Дії</Th>
                         </tr>
                         </thead>
                         <tbody>
                         {loading ? (
-                            <RowsSkeleton />
+                            <RowsSkeleton/>
                         ) : sorted.length === 0 ? (
-                            <tr><td colSpan={5} className="p-6 text-center text-neutral-500">Нічого не знайдено</td></tr>
+                            <tr>
+                                <td colSpan={5} className="p-6 text-center text-neutral-500">Нічого не знайдено</td>
+                            </tr>
                         ) : (
                             sorted.map((e) => (
                                 <tr key={e.id} className="border-t hover:bg-neutral-50">
@@ -207,7 +214,7 @@ export default function EditEvents() {
                                         {editingId === e.id ? (
                                             <input
                                                 value={form.name}
-                                                onChange={(ev) => setForm((f) => ({ ...f, name: ev.target.value }))}
+                                                onChange={(ev) => setForm((f) => ({...f, name: ev.target.value}))}
                                                 className="w-full rounded-lg border px-2 py-1 outline-none focus:ring-2 focus:ring-red-500"
                                             />
                                         ) : (
@@ -221,13 +228,13 @@ export default function EditEvents() {
                                                 <input
                                                     type="date"
                                                     value={form.date}
-                                                    onChange={(ev) => setForm((f) => ({ ...f, date: ev.target.value }))}
+                                                    onChange={(ev) => setForm((f) => ({...f, date: ev.target.value}))}
                                                     className="rounded-lg border px-2 py-1 outline-none focus:ring-2 focus:ring-red-500"
                                                 />
                                                 <input
                                                     type="time"
                                                     value={form.time}
-                                                    onChange={(ev) => setForm((f) => ({ ...f, time: ev.target.value }))}
+                                                    onChange={(ev) => setForm((f) => ({...f, time: ev.target.value}))}
                                                     className="rounded-lg border px-2 py-1 outline-none focus:ring-2 focus:ring-red-500"
                                                 />
                                             </div>
@@ -243,7 +250,7 @@ export default function EditEvents() {
                                         {editingId === e.id ? (
                                             <input
                                                 value={form.place}
-                                                onChange={(ev) => setForm((f) => ({ ...f, place: ev.target.value }))}
+                                                onChange={(ev) => setForm((f) => ({...f, place: ev.target.value}))}
                                                 className="w-full rounded-lg border px-2 py-1 outline-none focus:ring-2 focus:ring-red-500"
                                             />
                                         ) : (
@@ -257,7 +264,7 @@ export default function EditEvents() {
                                                 inputMode="numeric"
                                                 placeholder="грн"
                                                 value={form.price}
-                                                onChange={(ev) => setForm((f) => ({ ...f, price: ev.target.value }))}
+                                                onChange={(ev) => setForm((f) => ({...f, price: ev.target.value}))}
                                                 className="w-28 rounded-lg border px-2 py-1 outline-none focus:ring-2 focus:ring-red-500"
                                             />
                                         ) : (
@@ -317,8 +324,11 @@ export default function EditEvents() {
                     <h3 className="text-lg font-semibold mb-2">Підтвердження видалення</h3>
                     <p className="text-sm text-neutral-600 mb-4">Видалити подію? Дію не можна скасувати.</p>
                     <div className="flex justify-end gap-2">
-                        <button className="rounded-xl border px-3 py-2 text-sm" onClick={closeConfirm}>Скасувати</button>
-                        <button className="rounded-xl bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700" onClick={deleteConfirmed}>
+                        <button className="rounded-xl border px-3 py-2 text-sm" onClick={closeConfirm}>Скасувати
+                        </button>
+                        <button
+                            className="rounded-xl bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
+                            onClick={deleteConfirmed}>
                             Видалити
                         </button>
                     </div>
@@ -328,13 +338,12 @@ export default function EditEvents() {
     );
 }
 
-// ---------- Small UI helpers ----------
-function Th({ children, w, sortable, sort, field, onClick }) {
+function Th({children, w, sortable, sort, field, onClick}) {
     const active = sortable && sort.key === field;
     const arrow = !sortable ? null : active ? (sort.dir === "asc" ? " ↑" : " ↓") : " ↕";
     return (
         <th
-            style={{ width: w }}
+            style={{width: w}}
             onClick={onClick}
             className={`px-4 py-3 ${sortable ? "cursor-pointer select-none" : ""}`}
             title={sortable ? "Сортувати" : undefined}
@@ -343,16 +352,19 @@ function Th({ children, w, sortable, sort, field, onClick }) {
         </th>
     );
 }
-function Td({ children }) { return <td className="px-4 py-3 align-top">{children}</td>; }
+
+function Td({children}) {
+    return <td className="px-4 py-3 align-top">{children}</td>;
+}
 
 function RowsSkeleton() {
     return (
         <>
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({length: 6}).map((_, i) => (
                 <tr key={i} className="border-t">
-                    {Array.from({ length: 5 }).map((_, j) => (
+                    {Array.from({length: 5}).map((_, j) => (
                         <td key={j} className="px-4 py-3">
-                            <div className="h-4 w-3/4 animate-pulse rounded bg-neutral-200" />
+                            <div className="h-4 w-3/4 animate-pulse rounded bg-neutral-200"/>
                         </td>
                     ))}
                 </tr>
@@ -361,9 +373,11 @@ function RowsSkeleton() {
     );
 }
 
-function ConfirmModal({ children, onClose }) {
+function ConfirmModal({children, onClose}) {
     useEffect(() => {
-        const onKey = (e) => { if (e.key === "Escape") onClose(); };
+        const onKey = (e) => {
+            if (e.key === "Escape") onClose();
+        };
         document.addEventListener("keydown", onKey);
         const prevOverflow = document.body.style.overflow;
         document.body.style.overflow = "hidden";
@@ -375,7 +389,7 @@ function ConfirmModal({ children, onClose }) {
 
     const modal = (
         <div className="fixed inset-0 z-[1000]">
-            <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+            <div className="absolute inset-0 bg-black/40" onClick={onClose}/>
             <div className="absolute inset-0 grid place-items-center p-4">
                 <div
                     className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"

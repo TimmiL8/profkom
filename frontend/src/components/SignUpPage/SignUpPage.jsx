@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate, Link} from "react-router-dom";
 
 export default function SignUpPage() {
     const [userName, setUserName] = useState("");
@@ -22,7 +22,7 @@ export default function SignUpPage() {
         try {
             const response = await fetch("http://192.168.1.52:3001/register", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     user_name: userName,
                     surname,
@@ -41,8 +41,8 @@ export default function SignUpPage() {
 
             const loginResponse = await fetch("http://192.168.1.52:3001/login", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({email, password}),
             });
 
             const loginResult = await loginResponse.json();
@@ -67,7 +67,7 @@ export default function SignUpPage() {
         bg-neutral-900/95 backdrop-blur
         shadow-[0_8px_30px_rgba(0,0,0,.45)]
       ">
-                <div className="pointer-events-none absolute inset-2 rounded-xl border border-neutral-800/80" />
+                <div className="pointer-events-none absolute inset-2 rounded-xl border border-neutral-800/80"/>
 
                 <form
                     onSubmit={handleSignUp}
@@ -80,7 +80,6 @@ export default function SignUpPage() {
                         </p>
                     </header>
 
-                    {/* Name */}
                     <div>
                         <label htmlFor="userName" className="text-neutral-300 text-sm">Name</label>
                         <input
@@ -94,7 +93,6 @@ export default function SignUpPage() {
                         />
                     </div>
 
-                    {/* Surname */}
                     <div>
                         <label htmlFor="surname" className="text-neutral-300 text-sm">Surname</label>
                         <input
@@ -108,7 +106,6 @@ export default function SignUpPage() {
                         />
                     </div>
 
-                    {/* Email */}
                     <div>
                         <label htmlFor="email" className="text-neutral-300 text-sm">Email</label>
                         <input
@@ -122,7 +119,6 @@ export default function SignUpPage() {
                         />
                     </div>
 
-                    {/* Password */}
                     <div>
                         <label htmlFor="password" className="text-neutral-300 text-sm">Password</label>
                         <input
@@ -136,7 +132,6 @@ export default function SignUpPage() {
                         />
                     </div>
 
-                    {/* Group */}
                     <div>
                         <label htmlFor="group" className="text-neutral-300 text-sm">Group</label>
                         <input
@@ -149,7 +144,6 @@ export default function SignUpPage() {
                         />
                     </div>
 
-                    {/* Phone */}
                     <div>
                         <label htmlFor="phone" className="text-neutral-300 text-sm">Phone</label>
                         <input
@@ -162,16 +156,16 @@ export default function SignUpPage() {
                         />
                     </div>
 
-                    {/* Error */}
                     {err && (
-                        <div className="text-sm text-red-300 bg-red-900/40 border border-red-700/50 rounded-md px-3 py-2">
+                        <div
+                            className="text-sm text-red-300 bg-red-900/40 border border-red-700/50 rounded-md px-3 py-2">
                             {err}
                         </div>
                     )}
 
-                    {/* Actions */}
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mt-1">
-                        <Link to="/sign-in" className="text-neutral-300 hover:text-neutral-100 text-sm text-center sm:text-left">
+                        <Link to="/sign-in"
+                              className="text-neutral-300 hover:text-neutral-100 text-sm text-center sm:text-left">
                             Already have an account?
                         </Link>
                     </div>

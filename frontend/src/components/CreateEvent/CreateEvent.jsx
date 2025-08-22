@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 const apiBase = "http://192.168.1.52:3001";
 
@@ -62,12 +62,13 @@ export default function CreateEvent() {
 
     useEffect(() => {
         if (!jwt) return;
-        fetch(`${apiBase}/me`, { headers: { Authorization: `Bearer ${jwt}` } })
+        fetch(`${apiBase}/me`, {headers: {Authorization: `Bearer ${jwt}`}})
             .then(r => r.json())
             .then(d => {
                 if (d?.error) setMessage(`JWT помилка: ${d.error}`);
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }, [jwt]);
 
     async function handleImageUpload(e) {
@@ -99,11 +100,11 @@ export default function CreateEvent() {
     }
 
     function handlePriceKeyDown(e) {
-        const allowedNav = ["Backspace","Delete","ArrowLeft","ArrowRight","Home","End","Tab"];
+        const allowedNav = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Home", "End", "Tab"];
         if (allowedNav.includes(e.key)) return;
 
         const isCtrlCmd = e.ctrlKey || e.metaKey;
-        if (isCtrlCmd && ["a","c","v","x"].includes(e.key.toLowerCase())) return;
+        if (isCtrlCmd && ["a", "c", "v", "x"].includes(e.key.toLowerCase())) return;
 
         if (e.key >= "0" && e.key <= "9") return;
 
@@ -280,7 +281,8 @@ export default function CreateEvent() {
                     </Field>
 
                     <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
-                        <label className="flex-1 flex flex-col items-center justify-center border bg-white rounded-xl shadow px-6 py-5 cursor-pointer hover:shadow-md">
+                        <label
+                            className="flex-1 flex flex-col items-center justify-center border bg-white rounded-xl shadow px-6 py-5 cursor-pointer hover:shadow-md">
                             <span className="text-3xl leading-none">↓</span>
                             <span className="text-base font-medium">Завантажити фото</span>
                             <input
@@ -324,7 +326,7 @@ export default function CreateEvent() {
                             {description && <p className="text-sm text-gray-700 mb-4">{description}</p>}
                             <div className="aspect-[4/3] w-full bg-gray-100 rounded-xl overflow-hidden">
                                 {image ? (
-                                    <img src={image} alt="превʼю" className="h-full w-full object-cover" />
+                                    <img src={image} alt="превʼю" className="h-full w-full object-cover"/>
                                 ) : (
                                     <div className="h-full w-full grid place-items-center text-gray-400">
                                         Без зображення
@@ -339,7 +341,7 @@ export default function CreateEvent() {
     );
 }
 
-function Field({ label, children }) {
+function Field({label, children}) {
     return (
         <label className="block">
             <div className="mb-1 text-sm text-gray-700">{label}</div>
